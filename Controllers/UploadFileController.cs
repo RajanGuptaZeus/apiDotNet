@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FileUploadApp.Controllers
 {
-    [Route("api/[controller]/[Action]")]
+    [Route("api/[controller]")]
     [ApiController]
 
     public class UploadFileController : ControllerBase
@@ -16,8 +16,14 @@ namespace FileUploadApp.Controllers
 
         public UploadFileController(IUploadFileDL uploadFileDL)
         {
-            // dependency injection implement kiya DI
+            // dependency injection implement kiya - DI
             _uploadFileDL = uploadFileDL;
+        }
+
+        [HttpGet]
+        public string Test()
+        {
+            return "Hello World";
         }
 
         [HttpPost]
@@ -27,15 +33,28 @@ namespace FileUploadApp.Controllers
             string path = "upload/" + request.File.FileName;
             try
             {
-                response = await _uploadFileDL.UploadCsvFile(request,path);
-
-                using(FileStream stream = new FileStream(path,FileMode.CreateNew))
+                if (request.File.FileName.ToLower().EndsWith(".csv"))
                 {
-                    await request.File.CopyToAsync(stream);
+
+                    if (System.IO.File.Exists(path))
+                    {
+                        System.IO.File.Delete(path);
+                    }
+                    using (FileStream stream = new FileStream(path, FileMode.CreateNew))
+                    {
+                        await request.File.CopyToAsync(stream);
+                    }
+                    response = await _uploadFileDL.UploadCsvFile(request, path);
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Invalid file type. Only CSV files are allowed.";
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Exception occured");
                 response.IsSuccess = false;
                 response.Message = ex.Message;
             }
