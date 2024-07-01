@@ -57,3 +57,4 @@ C:\Users\rajan.gupta\Desktop\c#\FileUploadApp\bin\Debug\net8.0\runtimes\win\lib\
 C:\Users\rajan.gupta\Desktop\c#\FileUploadApp\bin\Debug\net8.0\ExcelDataReader.dll
 C:\Users\rajan.gupta\Desktop\c#\FileUploadApp\bin\Debug\net8.0\ExcelDataReader.DataSet.dll
 C:\Users\rajan.gupta\Desktop\c#\FileUploadApp\obj\Debug\net8.0\FileUploadApp.sourcelink.json
+C:\Users\rajan.gupta\Desktop\c#\FileUploadApp\bin\Debug\net8.0\RabbitMQ.Client.dll

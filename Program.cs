@@ -1,11 +1,13 @@
 using FileUploadApp.DataAccessLayer;
+using FileUploadApp.rabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IUploadFileDL, UploadFileDL>();
+// builder.Services.AddScoped<IUploadFileDL, UploadFileDL>();
+builder.Services.AddScoped<IFormDL, FormDL>();
 
 var app = builder.Build();
 
@@ -19,4 +21,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapControllers();
 
-app.Run();
+// app.Run();
+Thread thread = new Thread(new ThreadStart(app.Run));
+thread.Start();
+
+
+Thread sub = new Thread(new ThreadStart(Receiver.receiverFunction));
+sub.Start();
