@@ -22,9 +22,14 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 // app.Run();
-Thread thread = new Thread(new ThreadStart(app.Run));
-thread.Start();
+// Thread thread = new Thread(new ThreadStart(app.Run));
+// thread.Start();
 
 
 Thread sub = new Thread(new ThreadStart(Receiver.receiverFunction));
 sub.Start();
+
+Thread sqlAdd = new Thread(new ThreadStart(SqlReceiver.SqlReceiverFunction));
+sqlAdd.Start();
+
+app.Run();

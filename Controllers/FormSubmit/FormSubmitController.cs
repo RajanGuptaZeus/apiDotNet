@@ -29,7 +29,7 @@ namespace FileUploadApp.Controllers
             {
                 response.IsSuccess = false;
                 response.Message = ex.Message;
-            }
+            } 
             return Ok(response);
         }
 

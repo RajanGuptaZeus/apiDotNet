@@ -69,7 +69,7 @@ namespace FileUploadApp.DataAccessLayer
 
             try
             {
-                string sqlCommand = "SELECT name, phoneNumber, password FROM userData";
+                string sqlCommand = "SELECT userId , name, phoneNumber, password FROM userData";
                 GetConnection();
                 MySqlCommand cmd = new MySqlCommand(sqlCommand, _mySqlConnection);
 
@@ -79,11 +79,12 @@ namespace FileUploadApp.DataAccessLayer
                     {
                         while (await reader.ReadAsync())
                         {
-                            string name = reader.GetString(0);
-                            string phoneNumber = reader.GetString(1);
-                            string password = reader.GetString(2);
+                            Int32 id = reader.GetInt32(0);
+                            string name = reader.GetString(1);
+                            string phoneNumber = reader.GetString(2);
+                            string password = reader.GetString(3);
 
-                            formValues.Add($"{name}, {phoneNumber}, {password}");
+                            formValues.Add($"{id}, {name}, {phoneNumber}, {password}");
                         }
                     }
                 }
