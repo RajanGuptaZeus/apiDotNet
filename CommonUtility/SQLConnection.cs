@@ -10,7 +10,8 @@ namespace FileUploadApp.CommonUtility;
 public class SQLConnection
 {
     private static readonly string ConnectionString = "server=localhost;user=root;password= ;database=upload_csv;port=3306;";
-    public static async Task<MySqlCommand?> ConnectToDb(string message)
+    private static MySqlConnection? sqlConnection;
+    public static async Task<MySqlConnection?> ConnectToDb()
     {
         AsyncRetryPolicy retryPolicy = Policy
             .Handle<Exception>()
@@ -27,14 +28,13 @@ public class SQLConnection
         {
             return await retryPolicy.ExecuteAsync(async () =>
             {
-                var sqlConnection = new MySqlConnection(ConnectionString);
+                sqlConnection = new MySqlConnection(ConnectionString);
                 if (sqlConnection.State != ConnectionState.Open)
                 {
                     await sqlConnection.OpenAsync();
+                    Console.WriteLine("Connected To database");
                 }
-
-                var sqlCommand = new MySqlCommand(message, sqlConnection);
-                return sqlCommand;
+                return sqlConnection;
             });
         }
         catch (Exception ex)
