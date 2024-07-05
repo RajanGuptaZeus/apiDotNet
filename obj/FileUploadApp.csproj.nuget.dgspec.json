@@ -62,6 +62,10 @@
               "target": "Package",
               "version": "[8.4.0, )"
             },
+            "Polly": {
+              "target": "Package",
+              "version": "[8.4.1, )"
+            },
             "RabbitMQ.Client": {
               "target": "Package",
               "version": "[6.8.1, )"
