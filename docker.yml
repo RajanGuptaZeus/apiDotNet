@@ -1,0 +1,11 @@
+services:
+  mongo:
+    container_name : mymongo
+    image: mongo:latest
+    # environments:
+    #   MONGO_DEFAULT_USER: "root"
+    #   MONGO_DEFAULT_PASSWORD: "root123"
+    ports:
+      - '27017:27017'
+      - '8081:8081'
+

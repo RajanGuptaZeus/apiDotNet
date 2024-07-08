@@ -14,7 +14,7 @@ namespace FileUploadApp.rabbitMQ
         private static MySqlConnection? sqlConnectionToDB;
         private static IModel? channel;
 
-        public static async void SqlReceiverFunction()
+        public static async Task SqlReceiverFunction()
         {
             Console.WriteLine("Started SQL Receiver");
 
@@ -23,6 +23,7 @@ namespace FileUploadApp.rabbitMQ
             channel.QueueDeclare("sqlCommand", durable: true, exclusive: false, autoDelete: false, arguments: null);
             var consumer = new EventingBasicConsumer(channel);
             sqlConnectionToDB = await SQLConnection.ConnectToDb();
+            MongooseConnect.mongoConnection();
 
             consumer.Received += async (model, eventArgs) =>
             {
@@ -40,6 +41,9 @@ namespace FileUploadApp.rabbitMQ
                 {
                     Console.WriteLine("Error executing SQL command: " + ex.Message);
                     channel.BasicPublish("", "sqlCommand", body: rabbitMQRes);
+                } finally {
+                    // Cleanup resources
+                    DisposeConnections();
                 }
             };
 
@@ -48,9 +52,6 @@ namespace FileUploadApp.rabbitMQ
             Console.WriteLine("Press any key to stop SQL Receiver");
             Console.ReadKey();
             Console.WriteLine("Stopped SQL Receiver");
-
-            // Cleanup resources
-            DisposeConnections();
         }
 
         private static void DisposeConnections()
