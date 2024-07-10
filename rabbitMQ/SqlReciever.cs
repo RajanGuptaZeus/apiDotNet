@@ -75,6 +75,7 @@ namespace FileUploadApp.rabbitMQ
             catch (Exception ex)
             {
                 Console.WriteLine($"Error disposing connections: {ex.Message}");
+                throw new Exception (ex.Message);              
             }
         }
 
