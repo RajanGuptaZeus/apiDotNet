@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using FileUploadApp.rabbitMQ;
 using Microsoft.VisualBasic.FileIO;
+using FileUploadApp.CommonUtility;
 
 namespace FileUploadApp.DataAccessLayer
 {
@@ -73,7 +74,7 @@ namespace FileUploadApp.DataAccessLayer
         //     return cmd;
         // }
 
-        public static async Task<UploadFileResponse> UploadCsvFile(string path)
+        public static async Task<UploadFileResponse> UploadCsvFile(string id , string path)
         {
             int malformedPackets = 0;
             bool firstFlag = true;
@@ -159,10 +160,10 @@ namespace FileUploadApp.DataAccessLayer
                         int BATCH_SIZE = 1000;
                         int iFrom = 0;
                         int iTo = BATCH_SIZE;
-
+                        var status = MongooseConnect.UpdateDocumentById(id,"Message","Craeting Sql Command For batching ....");
                         while (iFrom < dataTable.Count - (dataTable.Count % BATCH_SIZE))
                         {
-                            string cmd = CommonUtility.CreatingSqlCommand.CreateSqlCommand(dataTable, iFrom, iTo, "userrecords");
+                            string cmd = CreatingSqlCommand.CreateSqlCommand(dataTable, iFrom, iTo, "userrecords",id);
                             Sender.senderFunction("sqlCommand", cmd);
                             iFrom += BATCH_SIZE;
                             iTo += BATCH_SIZE;
@@ -174,7 +175,7 @@ namespace FileUploadApp.DataAccessLayer
                             {
                                 iTo = dataTable.Count;
                             }
-                            string cmd = CommonUtility.CreatingSqlCommand.CreateSqlCommand(dataTable, iFrom, iTo, "userrecords");
+                            string cmd = CreatingSqlCommand.CreateSqlCommand(dataTable, iFrom, iTo, "userrecords",id);
                             Sender.senderFunction("sqlCommand", cmd);
                         }
 

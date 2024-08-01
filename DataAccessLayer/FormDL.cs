@@ -30,7 +30,7 @@ namespace FileUploadApp.DataAccessLayer
 
             try
             {
-                string sqlCommand = "INSERT INTO userData (name, phoneNumber, password) VALUES (@name, @phoneNumber, @password)";
+                string sqlCommand = "INSERT INTO userRecords (name, phoneNumber, password) VALUES (@name, @phoneNumber, @password)";
                 GetConnection();
                 MySqlCommand cmd = new MySqlCommand(sqlCommand, _mySqlConnection);
                 cmd.Parameters.AddWithValue("@name", request.name);

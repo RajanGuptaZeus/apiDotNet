@@ -21,8 +21,10 @@ public class Receiver
             consumer.Received += async (model, eventArgs) =>
             {
                 var body = eventArgs.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var res = await UploadFileDL.UploadCsvFile(message);
+                var msg = Encoding.UTF8.GetString(body);
+                var id = msg.Split("-")[0];
+                var message = msg.Split("-")[1];
+                var res = await UploadFileDL.UploadCsvFile(id,message);
                 Console.WriteLine(res.Message);
                 Console.WriteLine(res.IsSuccess);
             };

@@ -14,7 +14,7 @@ namespace FileUploadApp.rabbitMQ
         private static MySqlConnection? sqlConnectionToDB;
         private static IModel? channel;
 
-        public static async Task SqlReceiverFunction()
+        public static async void SqlReceiverFunction()
         {
             Console.WriteLine("Started SQL Receiver");
 
@@ -23,28 +23,29 @@ namespace FileUploadApp.rabbitMQ
             channel.QueueDeclare("sqlCommand", durable: true, exclusive: false, autoDelete: false, arguments: null);
             var consumer = new EventingBasicConsumer(channel);
             sqlConnectionToDB = await SQLConnection.ConnectToDb();
-            MongooseConnect.mongoConnection();
+            int i = 0;
 
             consumer.Received += async (model, eventArgs) =>
             {
                 var body = eventArgs.Body.ToArray();
                 rabbitMQRes = body;
-                var message = Encoding.UTF8.GetString(body);
-                
+                var msg = Encoding.UTF8.GetString(body);
+                var id = msg.Split("|")[0];
+                var status = MongooseConnect.UpdateDocumentById(id,"Message",$"Executing batch no : {i+1}");
+                var message = msg.Split("|")[1];
                 try
                 {
                     var sqlCommand = new MySqlCommand(message, sqlConnectionToDB);
                     await sqlCommand.ExecuteNonQueryAsync();
+                    i++;
+                    // Console.WriteLine(i);
                     Console.WriteLine("SQL Command executed successfully");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error executing SQL command: " + ex.Message);
                     channel.BasicPublish("", "sqlCommand", body: rabbitMQRes);
-                } finally {
-                    // Cleanup resources
-                    DisposeConnections();
-                }
+                } 
             };
 
             channel.BasicConsume("sqlCommand", true, consumer);

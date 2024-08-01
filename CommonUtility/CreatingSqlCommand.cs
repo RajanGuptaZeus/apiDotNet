@@ -4,9 +4,9 @@ namespace FileUploadApp.CommonUtility
 {
     public class CreatingSqlCommand
     {
-        public static string CreateSqlCommand(List<string[]> data, int start, int end, string tableName)
+        public static string CreateSqlCommand(List<string[]> data, int start, int end, string tableName , string id)
         {
-            string sqlCommand = $"INSERT INTO {tableName} (EmailId, Name, Country, State, City, TelephoneNumber, AddressLine1, AddressLine2, DateOfBirth, GrossSalaryFY2019_20, GrossSalaryFY2020_21, GrossSalaryFY2021_22, GrossSalaryFY2022_23, GrossSalaryFY2023_24) VALUES ";
+            string sqlCommand = $"{id}|INSERT INTO {tableName} (EmailId, Name, Country, State, City, TelephoneNumber, AddressLine1, AddressLine2, DateOfBirth, GrossSalaryFY2019_20, GrossSalaryFY2020_21, GrossSalaryFY2021_22, GrossSalaryFY2022_23, GrossSalaryFY2023_24) VALUES ";
 
             for (int i = start; i < end; i++)
             {
